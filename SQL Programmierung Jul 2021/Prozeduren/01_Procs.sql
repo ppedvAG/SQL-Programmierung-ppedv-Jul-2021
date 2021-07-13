@@ -100,3 +100,36 @@ select @ergebnis
 exec gpdemo2 @brutto=3, @netto= 100
 
 
+
+
+--jetzt mit Indizes
+select * from ku1 where id < 2  -- IX Seek
+select * from ku1 where id < 12000 --CL IX SCAN
+
+--jetzt mit Proc
+
+create proc gpdemo3 @par1 int 
+as
+select * from ku1 where id < @par1;
+GO
+
+set statistics io, time on
+exec gpdemo3 2 --6 Seiten ca 0ms
+
+exec gpdemo3 1000000 --6 Seiten ca 0ms ... 3008162!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+--Irre..weil der Plan ja immer derselbe sein wird...auch bei Neustart des Server
+--der erste Aufruf der Proc ersteltl den Plan
+
+dbcc freeproccache
+
+
+exec gpdemo3 1000000
+
+exec gpdemo3 2
+
+--wekcher Plan ist nun besser:
+--was fragst du ab.. häufig kleine Werte für ID: SEEK
+--häufig beides: SCAN
+--häfugi große ID: SCAN
+
