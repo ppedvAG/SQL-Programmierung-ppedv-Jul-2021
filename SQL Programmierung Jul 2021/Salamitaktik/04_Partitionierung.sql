@@ -39,7 +39,7 @@ select $partition.fzahl(117) -- 2
 --Part Schema
 create partition scheme schZahl
 as
-partition fzahl to (bis100,bis200,rest)
+partition fzahl to (bis100,bis200,rest) ---15000 Dateigruppen
 ---                     1    2     3
 
 create table ptab(
@@ -90,8 +90,7 @@ from ptab
 group by $partition.fzahl(nummer)
 
 --neue Grenze 5000
-alter partition function fzahl()
-		split range(5000)
+alter partition function fzahl() split range(5000)
 
 select * from ptab where nummer = 1117 --4800 Seiten
 
