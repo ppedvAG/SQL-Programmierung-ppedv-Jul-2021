@@ -26,3 +26,9 @@
 
 ##Abfragespeicher
 	bad procedure
+
+##Transactions
+	Sperren, Isolationlevel, Snapshot Isolation
+
+##Problemlösungen
+	Join vs Cursor vs Window Function
